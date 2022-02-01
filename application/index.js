@@ -19,6 +19,10 @@ const server = http.createServer(async (req, res) => {
       res.setHeader('Content-Type', 'text/plain');
       res.end(JSON.stringify(rows));
     }
+
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('HTTP 404');
 });
 
 server.listen(port, hostname, async () => {
