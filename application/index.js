@@ -4,7 +4,7 @@ import { generate } from './nameGenerator.js';
 import http from 'http';
 import url from 'url';
 
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';
 const port = 3000;
 
 await createTable();
