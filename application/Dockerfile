@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:16 AS builder
 
 WORKDIR /usr/src/app
 
@@ -9,17 +9,17 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+COPY . .
 
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
 
-# Bundle app source
-COPY . .
+
+FROM node:16-slim
+
+COPY --from=builder /usr/local/bin /usr/local/bin
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app .
 
 EXPOSE 3000
 CMD [ "node", "index.js" ]

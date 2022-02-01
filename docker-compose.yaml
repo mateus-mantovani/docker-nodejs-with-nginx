@@ -17,29 +17,26 @@ services:
     application:
         build:
             context: ./application
+        image: mateus21/application-image
         entrypoint: dockerize -wait tcp://mysql:3306 -timeout 40s node index.js
         container_name: application
         restart: always
-        volumes:
-            - ./application:/usr/src/app
         tty: true
-        ports:
-            - "3000:3000"
         networks:
             - applicationnetwork
         depends_on:
             - mysql
-    #nginx:
-    #    build:
-    #        context: ./nginx
-    #        dockerfile: Dockerfile.prod
-    #    image: mateus21/nginx.prod
-    #    container_name: nginx
-    #    tty: true
-    #    ports:
-    #        - "8080:80"
-    #    networks:
-    #        - applicationnetwork
+    nginx:
+        build:
+            context: ./nginx
+        container_name: nginx
+        tty: true
+        ports:
+            - "8080:80"
+        networks:
+            - applicationnetwork
+        depends_on:
+            - application
 
 networks:
     applicationnetwork:
